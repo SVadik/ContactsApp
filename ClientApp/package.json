@@ -5,7 +5,7 @@
   "author": "Vadim Sagitov",
   "scripts": {
     "ng": "ng",
-    "start": "echo hello && ng serve",
+    "start": "ng serve",
     "build": "ng build"
   },
   "dependencies": {
@@ -23,6 +23,7 @@
     "@angular/cli": "~9.1.1",
     "@angular/compiler-cli": "~9.1.1",
     "@angular-devkit/build-angular": "~0.901.1",
+    "@angular/language-service": "~8.2.0",
     "@types/node": "^13.11.1",
     "typescript": "~3.8.3"
   }

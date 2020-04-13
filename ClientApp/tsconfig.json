@@ -6,6 +6,7 @@
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,
+    "emitDecoratorMetadata": true,
     "module": "esnext",
     "moduleResolution": "node",
     "target": "es2015",
@@ -15,7 +16,11 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@app/*": [ "src/app/*" ],
+      "@environments/*": [ "src/environments/*" ]
+    }
   },
   "files": [
    "src/main.ts",
