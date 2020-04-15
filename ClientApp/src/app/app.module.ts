@@ -1,41 +1,49 @@
 ﻿import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-
-// used to create fake backend
-//import { fakeBackendProvider } from './_helpers';
 
 import { AppComponent } from './app.component';
 import { appRoutingModule } from './app.routing';
+import { AppMaterialModule } from './app.material.module';
 
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 import { HomeComponent } from './home';
 import { AdminComponent } from './admin';
 import { LoginComponent } from './login';
 import { RegisterComponent } from './register';
+import { ContactformComponent } from './contactform';
+import { ContactService } from './_services';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LayoutModule } from '@angular/cdk/layout';
+
 
 @NgModule({
     imports: [
         BrowserModule,
         ReactiveFormsModule,
+        BrowserAnimationsModule,
         HttpClientModule,
-        appRoutingModule
+        FormsModule,
+        ReactiveFormsModule,
+        LayoutModule,
+        AppMaterialModule,
+        appRoutingModule,
     ],
     declarations: [
         AppComponent,
         HomeComponent,
         AdminComponent,
         LoginComponent,
-        RegisterComponent
+        RegisterComponent,
+        ContactformComponent
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-
-        // provider used to create fake backend
-        //fakeBackendProvider
+        ContactService
     ],
+    entryComponents: [ContactformComponent],
     bootstrap: [AppComponent]
 })
 

@@ -61,4 +61,3 @@ LoginComponent = __decorate([
         AuthenticationService])
 ], LoginComponent);
 export { LoginComponent };
-//# sourceMappingURL=login.component.js.map

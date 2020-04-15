@@ -3,4 +3,3 @@ export var Role;
     Role["User"] = "User";
     Role["Admin"] = "Admin";
 })(Role || (Role = {}));
-//# sourceMappingURL=role.js.map

@@ -56,4 +56,3 @@ AuthenticationService = __decorate([
     __metadata("design:paramtypes", [HttpClient])
 ], AuthenticationService);
 export { AuthenticationService };
-//# sourceMappingURL=authentication.service.js.map

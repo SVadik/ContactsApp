@@ -64,4 +64,3 @@ RegisterComponent = __decorate([
         AuthenticationService])
 ], RegisterComponent);
 export { RegisterComponent };
-//# sourceMappingURL=register.component.js.map

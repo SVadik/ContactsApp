@@ -1,3 +1,3 @@
 export * from './authentication.service';
 export * from './user.service';
-//# sourceMappingURL=index.js.map
+export * from './contact.service';

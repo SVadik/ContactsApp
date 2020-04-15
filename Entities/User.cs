@@ -18,6 +18,12 @@ namespace ContactsApp.Entities
         public string Token { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
+        public ICollection<Contact> Contacts { get; set; }
+
+        public User()
+        {
+            Contacts = new List<Contact>();
+        }
 
         public static explicit operator User(RegisterModel model)
         {

@@ -31,4 +31,3 @@ AppComponent = __decorate([
         AuthenticationService])
 ], AppComponent);
 export { AppComponent };
-//# sourceMappingURL=app.component.js.map

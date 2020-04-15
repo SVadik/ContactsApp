@@ -5,6 +5,7 @@ import { LoginComponent } from './login';
 import { RegisterComponent } from './register';
 import { AuthGuard } from './_helpers';
 import { Role } from './_models';
+import { ContactformComponent } from './contactform';
 const routes = [
     {
         path: '',
@@ -25,8 +26,12 @@ const routes = [
         path: 'register',
         component: RegisterComponent
     },
+    {
+        path: 'contactform',
+        component: ContactformComponent,
+        canActivate: [AuthGuard]
+    },
     // otherwise redirect to home
     { path: '**', redirectTo: '' }
 ];
 export const appRoutingModule = RouterModule.forRoot(routes);
-//# sourceMappingURL=app.routing.js.map

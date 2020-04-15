@@ -32,4 +32,3 @@ ErrorInterceptor = __decorate([
     __metadata("design:paramtypes", [AuthenticationService])
 ], ErrorInterceptor);
 export { ErrorInterceptor };
-//# sourceMappingURL=error.interceptor.js.map

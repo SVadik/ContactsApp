@@ -3,7 +3,7 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "baseUrl": "./",
-    "sourceMap": true,
+    "sourceMap": false,
     "declaration": false,
     "downlevelIteration": true,
     "emitDecoratorMetadata": true,

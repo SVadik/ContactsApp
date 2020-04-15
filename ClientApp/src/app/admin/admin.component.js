@@ -29,4 +29,3 @@ AdminComponent = __decorate([
     __metadata("design:paramtypes", [UserService])
 ], AdminComponent);
 export { AdminComponent };
-//# sourceMappingURL=admin.component.js.map
