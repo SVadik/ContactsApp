@@ -1,11 +1,72 @@
 ﻿<div class="card mt-4">
-    <h4 class="card-header">Admin</h4>
-    <div class="card-body">
-        <p>This page can be accessed <u>only by administrators</u>.</p>
-        <p class="mb-1">All users from secure (admin only) api end point:</p>
-        <div *ngIf="loading" class="spinner-border spinner-border-sm"></div>
-        <ul *ngIf="users">
-            <li *ngFor="let user of users">{{user.firstName}} {{user.lastName}}</li>
-        </ul>
+  <h4 class="card-header">Admin</h4>
+  <div class="card-body">
+    <p>This page can be accessed <u>only by administrators</u>.</p>
+    <p class="mb-1">All users from secure (admin only) api end point:</p>
+    <div *ngIf="loading" class="spinner-border spinner-border-sm"></div>
+    <div class="home-container mat-elevation-z8">
+      <!-- <div><button title="Create" mat-raised-button color="accent" (click)="addContact()">Create</button></div> -->
+      <mat-form-field>
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Name">
+      </mat-form-field>
+      <table mat-table #table [dataSource]="dataSource" matSort>
+        
+        <!-- Id Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> Id </th>
+          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+        
+        <!-- Username Column -->
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Username </th>
+          <td mat-cell *matCellDef="let element"> {{element.username}} </td>
+        </ng-container>
+        
+        <!-- Firstname Column -->
+        <ng-container matColumnDef="firstname">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Firstname </th>
+          <td mat-cell *matCellDef="let element"> {{element.firstname}} </td>
+        </ng-container>
+        
+        <!-- Lastname Column -->
+        <ng-container matColumnDef="lastname">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Lastname </th>
+          <td mat-cell *matCellDef="let element"> {{element.lastname}} </td>
+        </ng-container>
+        
+        <!-- Middlename Column -->
+        <ng-container matColumnDef="middlename">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Middlename </th>
+          <td mat-cell *matCellDef="let element"> {{element.middlename}} </td>
+        </ng-container>
+        
+        
+        
+        <!-- <ng-container matColumnDef="deleted">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> deleted </th>
+          <td mat-cell *matCellDef="let element"> {{element.deleted}} </td>
+        </ng-container> -->
+        
+        <ng-container matColumnDef="role">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
+          <td mat-cell *matCellDef="let element"> {{element.role}} </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef> Action </th>
+          <td mat-cell *matCellDef="let element">
+            <button title="Edit" mat-raised-button color="primary" (click)="editUser(element.id)">Edit</button>
+            <button title="Delete" mat-raised-button color="warn" (click)="deleteUser(element.id)">Delete</button>
+          </td>
+        </ng-container>
+        
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="getRecordId(row.id)"></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[2, 5, 10, 20]" showFirstLastButtons></mat-paginator>
+      
     </div>
+  </div>
 </div>

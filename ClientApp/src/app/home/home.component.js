@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { ContactformComponent } from '../contactform/contactform.component';
 import { UserService, AuthenticationService, ContactService } from '@app/_services';
@@ -16,6 +16,8 @@ import { Global } from '@app/shared/Global';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { environment } from '@environments/environment';
 let HomeComponent = class HomeComponent {
     constructor(userService, authenticationService, snackBar, _contactService, dialog) {
@@ -25,8 +27,13 @@ let HomeComponent = class HomeComponent {
         this._contactService = _contactService;
         this.dialog = dialog;
         this.loading = false;
+        this.displayedColumns = ['name', 'email', 'gender', 'birth', 'message', 'action'];
         this.dataSource = new MatTableDataSource();
         this.currentUser = this.authenticationService.currentUserValue;
+    }
+    applyFilter(event) {
+        const filterValue = event.target.value;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
     }
     ngOnInit() {
         this.loading = true;
@@ -76,6 +83,8 @@ let HomeComponent = class HomeComponent {
             .subscribe(contacts => {
             this.loadingState = false;
             this.dataSource.data = contacts;
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
         });
     }
     getGender(gender) {
@@ -107,8 +116,20 @@ let HomeComponent = class HomeComponent {
         });
     }
 };
+__decorate([
+    ViewChild(MatPaginator),
+    __metadata("design:type", MatPaginator)
+], HomeComponent.prototype, "paginator", void 0);
+__decorate([
+    ViewChild(MatSort),
+    __metadata("design:type", MatSort)
+], HomeComponent.prototype, "sort", void 0);
 HomeComponent = __decorate([
-    Component({ templateUrl: 'home.component.html' }),
+    Component({
+        selector: 'app-home',
+        templateUrl: './home.component.html',
+        styleUrls: ['./home.component.css']
+    }),
     __metadata("design:paramtypes", [UserService,
         AuthenticationService,
         MatSnackBar,

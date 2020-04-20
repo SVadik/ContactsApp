@@ -20,7 +20,6 @@ import { environment } from '@environments/environment';
 
 export class ContactformComponent implements OnInit {
   msg: string;
-  indLoading = false;
   contactFrm: FormGroup;
   dbops: DBOperation;
   modalTitle: string;
@@ -29,12 +28,12 @@ export class ContactformComponent implements OnInit {
   selectedOption: string;
   contact: IContact;
   genders = [];
-
+  
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
-    private fb: FormBuilder,
-    private _contactService: ContactService,
-    public dialogRef: MatDialogRef<HomeComponent>) { }
-
+  private fb: FormBuilder,
+  private _contactService: ContactService,
+  public dialogRef: MatDialogRef<HomeComponent>) { }
+  
   ngOnInit() {
     // built contact form
     this.contactFrm = this.fb.group({
@@ -43,13 +42,15 @@ export class ContactformComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       gender: ['', [Validators.required]],
       birth: ['', [Validators.required]],
-      message: ['', [Validators.required]]
+      message: ['', [Validators.required]],
+      deleted: [''],
+      user: ['']
     });
     this.genders = Global.genders;
     // subscribe on value changed event of form to show validation message
     this.contactFrm.valueChanges.subscribe(data => this.onValueChanged(data));
     this.onValueChanged();
-
+    
     if (this.data.dbops === DBOperation.create) {
       this.contactFrm.reset();
     } else {
@@ -79,6 +80,7 @@ export class ContactformComponent implements OnInit {
   // form errors model
   // tslint:disable-next-line:member-ordering
   formErrors = {
+    // 'id': '',
     'name': '',
     'email': '',
     'gender': '',
@@ -105,41 +107,39 @@ export class ContactformComponent implements OnInit {
     'message': {
       'required': 'message is required.'
     }
-
+    
   };
+  
   onSubmit(formData: any) {
     const contactData = this.mapDateData(formData.value);
     switch (this.data.dbops) {
       case DBOperation.create:
-        this._contactService.addContact(`${environment.apiUrl}/home/addContact`
-        , contactData).subscribe(
-          data => {
-            // Success
-            if (data.message) {
-              this.dialogRef.close('success');
-            } else {
-              this.dialogRef.close('error');
-            }
-          },
-          error => {
+        this._contactService.addContact(`${environment.apiUrl}/home/addContact`, contactData).subscribe(
+        data => {
+          // Success
+          if (data.message) {
+            this.dialogRef.close('success');
+          } else {
             this.dialogRef.close('error');
           }
-        );
+        },
+        error => {
+          this.dialogRef.close('error');
+        });
         break;
       case DBOperation.update:
-        this._contactService.updateContact(`${environment.apiUrl}/home/updateContact`, contactData.id, contactData).subscribe(
-          data => {
-            // Success
-            if (data.message) {
-              this.dialogRef.close('success');
-            } else {
-              this.dialogRef.close('error');
-            }
-          },
-          error => {
+        this._contactService.updateContact(`${environment.apiUrl}/home/updateContact`, contactData).subscribe(
+        data => {
+          // Success
+          if (data.message) {
+            this.dialogRef.close('success');
+          } else {
             this.dialogRef.close('error');
           }
-        );
+        },
+        error => {
+          this.dialogRef.close('error');
+        });
         break;
       case DBOperation.delete:
         this._contactService.deleteContact(`${environment.apiUrl}/home/deleteContact`, contactData.id).subscribe(
@@ -147,17 +147,18 @@ export class ContactformComponent implements OnInit {
             // Success
             if (data.message) {
               this.dialogRef.close('success');
-            } else {
+            }
+            else {
               this.dialogRef.close('error');
             }
           },
           error => {
             this.dialogRef.close('error');
-          }
-        );
-        break;
+          });
+          break;
     }
   }
+
   SetControlsState(isEnable: boolean) {
     isEnable ? this.contactFrm.enable() : this.contactFrm.disable();
   }

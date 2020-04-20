@@ -21,7 +21,10 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.json",
-            "aot": false
+            "aot": false,
+            "styles": [
+              "src/styles.css"
+            ]
           },
           "configurations": {
             "production": {

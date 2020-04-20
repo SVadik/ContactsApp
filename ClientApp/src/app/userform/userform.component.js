@@ -13,79 +13,78 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ContactService } from '../_services/contact.service';
+import { UserService } from '../_services/user.service';
 import { DBOperation } from '../shared/DBOperation';
-import { Global } from '../shared/Global';
 import { environment } from '@environments/environment';
-let ContactformComponent = class ContactformComponent {
-    constructor(data, fb, _contactService, dialogRef) {
+let UserformComponent = class UserformComponent {
+    constructor(data, fb, userService, dialogRef) {
         this.data = data;
         this.fb = fb;
-        this._contactService = _contactService;
+        this.userService = userService;
         this.dialogRef = dialogRef;
         this.genders = [];
         // form errors model
         // tslint:disable-next-line:member-ordering
         this.formErrors = {
-            // 'id': '',
-            'name': '',
-            'email': '',
-            'gender': '',
-            'birth': '',
-            'message': ''
+            'id': '',
+            'username': '',
+            'firstname': '',
+            'lastname': '',
+            'middlename': '',
+            'password': '',
+            'role': '',
         };
         // custom valdiation messages
         // tslint:disable-next-line:member-ordering
         this.validationMessages = {
-            'name': {
-                'maxlength': 'Name cannot be more than 50 characters long.',
-                'required': 'Name is required.'
+            'id': {
+                'required': 'Id is required.'
             },
-            'email': {
-                'email': 'Invalid email format.',
-                'required': 'Email is required.'
+            'username': {
+                'required': 'Username is required.'
             },
-            'gender': {
-                'required': 'Gender is required.'
+            'firstname': {
+                'required': 'Firstname is required.'
             },
-            'birth': {
-                'required': 'Birthday is required.'
+            'lastname': {
+                'required': 'Lastname is required.'
             },
-            'message': {
-                'required': 'message is required.'
-            }
+            'password': {
+                'required': 'Password is required.'
+            },
+            'role': {
+                'required': 'Role is required.'
+            },
         };
     }
     ngOnInit() {
-        // built contact form
-        this.contactFrm = this.fb.group({
-            id: [''],
-            name: ['', [Validators.required, Validators.maxLength(50)]],
-            email: ['', [Validators.required, Validators.email]],
-            gender: ['', [Validators.required]],
-            birth: ['', [Validators.required]],
-            message: ['', [Validators.required]],
-            deleted: [''],
-            user: ['']
+        // built user form
+        this.userFrm = this.fb.group({
+            id: ['', Validators.required],
+            username: ['', Validators.required],
+            password: ['', Validators.required],
+            firstname: ['', Validators.required],
+            lastname: ['', Validators.required],
+            middlename: [''],
+            role: ['', Validators.required]
         });
-        this.genders = Global.genders;
         // subscribe on value changed event of form to show validation message
-        this.contactFrm.valueChanges.subscribe(data => this.onValueChanged(data));
+        this.userFrm.valueChanges.subscribe(data => this.onValueChanged(data));
         this.onValueChanged();
         if (this.data.dbops === DBOperation.create) {
-            this.contactFrm.reset();
+            this.userFrm.reset();
         }
         else {
-            this.contactFrm.setValue(this.data.contact);
+            this.userFrm.setValue(this.data.user);
         }
         this.SetControlsState(this.data.dbops === DBOperation.delete ? false : true);
     }
     // form value change event
     onValueChanged(data) {
-        if (!this.contactFrm) {
+        if (!this.userFrm) {
             return;
         }
-        const form = this.contactFrm;
+        const form = this.userFrm;
         // tslint:disable-next-line:forin
         for (const field in this.formErrors) {
             // clear previous error message (if any)
@@ -101,24 +100,24 @@ let ContactformComponent = class ContactformComponent {
             }
         }
     }
-    onSubmit(formData) {
-        const contactData = this.mapDateData(formData.value);
+    onSubmit(userData) {
         switch (this.data.dbops) {
-            case DBOperation.create:
-                this._contactService.addContact(`${environment.apiUrl}/home/addContact`, contactData).subscribe(data => {
-                    // Success
-                    if (data.message) {
-                        this.dialogRef.close('success');
-                    }
-                    else {
-                        this.dialogRef.close('error');
-                    }
-                }, error => {
-                    this.dialogRef.close('error');
-                });
-                break;
+            // case DBOperation.create:
+            //   this.userService.addUser(`${environment.apiUrl}/home/addUser`, userData).subscribe(
+            //     data => {
+            //       // Success
+            //       if (data.message) {
+            //         this.dialogRef.close('success');
+            //       } else {
+            //         this.dialogRef.close('error');
+            //       }
+            //     },
+            //     error => {
+            //       this.dialogRef.close('error');
+            //     });
+            //   break;
             case DBOperation.update:
-                this._contactService.updateContact(`${environment.apiUrl}/home/updateContact`, contactData).subscribe(data => {
+                this.userService.updateUser(`${environment.apiUrl}/home/updateUser`, userData).subscribe(data => {
                     // Success
                     if (data.message) {
                         this.dialogRef.close('success');
@@ -131,8 +130,7 @@ let ContactformComponent = class ContactformComponent {
                 });
                 break;
             case DBOperation.delete:
-                this._contactService.deleteContact(`${environment.apiUrl}/home/deleteContact`, contactData.id).subscribe(data => {
-                    // Success
+                this.userService.deleteUser(`${environment.apiUrl}/home/deleteUser`, userData.id).subscribe(data => {
                     if (data.message) {
                         this.dialogRef.close('success');
                     }
@@ -146,22 +144,17 @@ let ContactformComponent = class ContactformComponent {
         }
     }
     SetControlsState(isEnable) {
-        isEnable ? this.contactFrm.enable() : this.contactFrm.disable();
-    }
-    mapDateData(contact) {
-        contact.birth = new Date(contact.birth).toISOString();
-        return contact;
+        isEnable ? this.userFrm.enable() : this.userFrm.disable();
     }
 };
-ContactformComponent = __decorate([
+UserformComponent = __decorate([
     Component({
-        selector: 'app-contactform',
-        templateUrl: './contactform.component.html',
-        styleUrls: ['./contactform.component.css']
+        selector: 'app-userform',
+        templateUrl: './userform.component.html',
     }),
     __param(0, Inject(MAT_DIALOG_DATA)),
     __metadata("design:paramtypes", [Object, FormBuilder,
-        ContactService,
+        UserService,
         MatDialogRef])
-], ContactformComponent);
-export { ContactformComponent };
+], UserformComponent);
+export { UserformComponent };

@@ -32,16 +32,15 @@ let ContactService = class ContactService {
             .pipe(catchError(this.handleError));
     }
     // update contact details
-    updateContact(url, id, contact) {
-        const newurl = `${url}?id=${id}`;
-        return this.http.put(newurl, contact, httpOptions)
+    updateContact(url, contact) {
+        // const newurl = `${url}?id=${id}`;
+        return this.http.put(url, JSON.stringify(contact), httpOptions)
             .pipe(catchError(this.handleError));
     }
     // delete contact information
     deleteContact(url, id) {
         const newurl = `${url}?id=${id}`; // DELETE api/contact?id=42
-        return this.http.delete(newurl, httpOptions)
-            .pipe(catchError(this.handleError));
+        return this.http.delete(newurl, httpOptions);
     }
     // custom handler
     handleError(error) {

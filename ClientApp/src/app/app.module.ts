@@ -16,7 +16,7 @@ import { ContactformComponent } from './contactform';
 import { ContactService } from './_services';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
-
+import { UserformComponent } from './userform/userform.component';
 
 @NgModule({
     imports: [
@@ -36,8 +36,9 @@ import { LayoutModule } from '@angular/cdk/layout';
         AdminComponent,
         LoginComponent,
         RegisterComponent,
-        ContactformComponent
-    ],
+        ContactformComponent,
+        UserformComponent 
+      ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

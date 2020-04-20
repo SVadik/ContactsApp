@@ -5,4 +5,6 @@ export interface IContact {
     gender: number;
     birth: string;
     message: string;
+    deleted: boolean;
+    user: any;
 }

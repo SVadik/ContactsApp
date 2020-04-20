@@ -24,6 +24,10 @@ namespace ContactsApp.Controllers
         [Route("getAllContacts")]
         public IEnumerable<Contact> GetAll()
         {
+            if(User.Identity.Name == null)
+            {
+                return null;
+            }
             var userId = int.Parse(User.Identity.Name);
             var contacts = _context.Contacts.Where(x => !x.Deleted && x.User.Id == userId);
 
@@ -62,17 +66,17 @@ namespace ContactsApp.Controllers
             return Ok(new { message = "Contact is added successfully." });
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         [Route("updateContact")]
-        public IActionResult Update(int id, [FromBody] Contact item)
+        public IActionResult Update([FromBody] Contact item)
         {
             // set bad request if contact data is not provided in body
-            if (item == null || id == 0)
+            if (item == null)
             {
                 return BadRequest();
             }
 
-            var contact = _context.Contacts.FirstOrDefault(t => t.Id == id);
+            var contact = _context.Contacts.FirstOrDefault(t => t.Id == item.Id);
             if (contact == null)
             {
                 return NotFound();
@@ -92,7 +96,7 @@ namespace ContactsApp.Controllers
 
         [HttpDelete("{id}")]
         [Route("deleteContact")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete([FromQuery]int id)
         {
             var contact = _context.Contacts.FirstOrDefault(t => t.Id == id);
             if (contact == null)

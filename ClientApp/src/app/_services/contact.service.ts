@@ -36,9 +36,9 @@ export class ContactService {
   }
 
   // update contact details
-  updateContact(url: string, id: number, contact: IContact): Observable<any> {
-    const newurl = `${url}?id=${id}`;
-    return this.http.put(newurl, contact, httpOptions)
+  updateContact(url: string, contact: IContact): Observable<any> {
+    // const newurl = `${url}?id=${id}`;
+    return this.http.put(url, JSON.stringify(contact), httpOptions)
       .pipe(
         catchError(this.handleError)
       );
@@ -47,10 +47,7 @@ export class ContactService {
   // delete contact information
   deleteContact(url: string, id: number): Observable<any> {
     const newurl = `${url}?id=${id}`; // DELETE api/contact?id=42
-    return this.http.delete(newurl, httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.http.delete(newurl, httpOptions);
   }
 
   // custom handler

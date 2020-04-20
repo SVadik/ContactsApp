@@ -44,6 +44,7 @@ namespace ContactsApp.Controllers
 
         [Authorize(Roles = Role.Admin)]
         [HttpGet]
+        [Route("getAllUsers")]
         public IActionResult GetAll()
         {
             var users =  _userService.GetAll();

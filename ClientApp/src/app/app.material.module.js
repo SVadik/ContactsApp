@@ -21,11 +21,14 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
+import { MatSortModule } from '@angular/material/sort';
+import { FormsModule } from '@angular/forms';
 let AppMaterialModule = class AppMaterialModule {
 };
 AppMaterialModule = __decorate([
     NgModule({
         exports: [
+            FormsModule,
             MatToolbarModule,
             MatButtonModule,
             MatSidenavModule,
@@ -59,7 +62,8 @@ AppMaterialModule = __decorate([
             MatOptionModule,
             MatDialogModule,
             MatProgressSpinnerModule,
-            MatSnackBarModule
+            MatSnackBarModule,
+            MatSortModule
         ],
     })
 ], AppMaterialModule);

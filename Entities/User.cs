@@ -9,9 +9,9 @@ namespace ContactsApp.Entities
     public class User
     {
         public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string MiddleName { get; set; }
+        public string Firstname { get; set; }
+        public string Lastname { get; set; }
+        public string Middlename { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public string Role { get; set; }
@@ -31,9 +31,9 @@ namespace ContactsApp.Entities
             {
                 Username = model.Username,
                 Password = model.Password,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                MiddleName = model.Middlename,
+                Firstname = model.FirstName,
+                Lastname = model.LastName,
+                Middlename = model.Middlename,
                 Role = model.Role
             };
         }

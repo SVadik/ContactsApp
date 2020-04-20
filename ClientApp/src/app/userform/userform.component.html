@@ -1,0 +1,58 @@
+<form  (ngSubmit)="onSubmit(userFrm)"  [formGroup]="userFrm">
+  <h2 mat-dialog-title>{{data.modalTitle}}</h2>
+  
+  <div mat-dialog-content>
+      <mat-form-field appearance="outline">
+      <mat-label>Username</mat-label>
+      <input matInput placeholder="Username" formControlName="username">
+      <!-- <mat-icon matSuffix>sentiment_very_satisfied</mat-icon> -->
+      <!-- <mat-hint>Hint</mat-hint> -->
+      <mat-error *ngIf="formErrors.username">
+        {{ formErrors.username }}
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-content>
+    <mat-form-field appearance="outline">
+      <mat-label>Firstname</mat-label>
+      <input matInput placeholder="Firstname" formControlName="firstname">
+      <mat-error *ngIf="formErrors.firstname">
+        {{ formErrors.firstname }}
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-content>
+    <mat-form-field appearance="outline">
+      <mat-label>Lastname</mat-label>
+      <input matInput placeholder="Lastname" formControlName="lastname">
+      <mat-error *ngIf="formErrors.lastname">
+        {{ formErrors.lastname }}
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-content>
+    <mat-form-field appearance="outline">
+      <mat-label>Middlename</mat-label>
+      <input matInput placeholder="Middlename" formControlName="middlename">
+      <mat-error *ngIf="formErrors.middlename">
+        {{ formErrors.middlename }}
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-content>
+    <mat-form-field appearance="outline">
+      <mat-label>Role</mat-label>
+      <input matInput placeholder="Role" formControlName="role">
+      <mat-error *ngIf="formErrors.role">
+        {{ formErrors.role }}
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div>
+    <div mat-dialog-actions>
+    <button type="button" mat-raised-button color="warn" (click)="dialogRef.close()">Cancel</button>&nbsp;
+    <button type="submit" mat-raised-button color="primary" [disabled]="userFrm.invalid">{{data.modalBtnTitle}}</button>
+    </div>
+  </div>
+  
+  </form>
