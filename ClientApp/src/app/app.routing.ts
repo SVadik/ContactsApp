@@ -7,6 +7,7 @@ import { RegisterComponent } from './register';
 import { AuthGuard } from './_helpers';
 import { Role } from './_models';
 import { ContactformComponent } from './contactform';
+import { UserformComponent } from './userform/userform.component';
 
 const routes: Routes = [
     {
@@ -32,6 +33,12 @@ const routes: Routes = [
         path: 'contactform',
         component: ContactformComponent,
         canActivate: [AuthGuard]
+    },
+    {
+        path: 'userform',
+        component: UserformComponent,
+        canActivate: [AuthGuard],
+        data: { roles: [Role.Admin] }
     },
 
     // otherwise redirect to home

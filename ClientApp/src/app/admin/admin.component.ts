@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, ViewChild } from '@angular/core';
+﻿import { Component, OnInit, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { User, IContact } from '@app/_models';
 import { UserService, AuthenticationService, ContactService } from '@app/_services';
@@ -11,6 +11,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { environment } from '@environments/environment';
 import { UserformComponent } from '@app/userform/userform.component';
+import { ContactformComponent } from '@app/contactform';
 
 @Component({ 
   selector: 'app-admin',
@@ -26,13 +27,17 @@ export class AdminComponent implements OnInit {
   modalTitle: string;
   modalBtnTitle: string;
   currentUser: User;
+  contact: IContact;
   userFromApi: User;
+  selectedUserId: number;
   
   displayedColumns = [ 'id', 'username', 'firstname', 'lastname', 'middlename', 'role', 'action'];
+  displayedContactColumns = ['name', 'email', 'gender', 'birth', 'message', 'deleted', 'action'];
   dataSource = new MatTableDataSource<User>();
+  dataSourceContact = new MatTableDataSource<IContact>();
   
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
+  @ViewChildren(MatSort) sort = new QueryList<MatSort>();
   
   constructor(
     private userService: UserService,
@@ -98,8 +103,8 @@ export class AdminComponent implements OnInit {
       .subscribe(users => {
         this.loadingState = false;
         this.dataSource.data = users;
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator.toArray()[0];
+        this.dataSource.sort = this.sort.toArray()[0];
       });
     }
     
@@ -117,7 +122,7 @@ export class AdminComponent implements OnInit {
       this.selectedUser = this.dataSource.data.filter(x => x.id === id)[0];
       this.openUserDialog();
     }
-    deleteContact(id: number) {
+    deleteUser(id: number) {
       this.dbops = DBOperation.delete;
       this.modalTitle = 'Confirm to Delete ?';
       this.modalBtnTitle = 'Delete';
@@ -130,8 +135,78 @@ export class AdminComponent implements OnInit {
       });
     }
     
-    getRecordId(id: number) {
-      console.log(id);
+    applyContactFilter(event: Event) {
+      const filterValue = (event.target as HTMLInputElement).value;
+      this.dataSourceContact.filter = filterValue.trim().toLowerCase();
+    }
+
+    getGender(gender: number): string {
+      return Global.genders.filter(ele => ele.id === gender).map(ele => ele.name)[0];
+    }
+    
+    loadUserContacts(userId: number): void {
+      this._contactService.getUserContacts(`${environment.apiUrl}/home/getUserContacts`, userId)
+      .subscribe(contacts => {
+        this.loadingState = false;
+        this.dataSourceContact.data = contacts;
+        this.dataSourceContact.paginator = this.paginator.toArray()[1];
+        this.dataSourceContact.sort = this.sort.toArray()[1];
+      });
+    }
+    
+    editContact(id: number) {
+      this.dbops = DBOperation.update;
+      this.modalTitle = 'Edit Contact';
+      this.modalBtnTitle = 'Update';
+      this.contact = this.dataSourceContact.data.filter(x => x.id === id)[0];
+      this.openContactDialog();
+    }
+    
+    deleteContact(id: number) {
+      this.dbops = DBOperation.delete;
+      this.modalTitle = 'Confirm to Delete ?';
+      this.modalBtnTitle = 'Delete';
+      this.contact = this.dataSourceContact.data.filter(x => x.id === id)[0];
+      this.openContactDialog();
+    }
+    
+    openContactDialog(): void {
+      const dialogRef = this.dialog.open(ContactformComponent, {
+        width: '500px',
+        data: {
+          dbops: this.dbops,
+          modalTitle: this.modalTitle,
+          modalBtnTitle: this.modalBtnTitle,
+          contact: this.contact 
+        }
+      });
+      
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed');
+        if (result === 'success') {
+          this.loadingState = true;
+          this.loadUserContacts(this.selectedUserId);
+          switch (this.dbops) {
+            case DBOperation.create:
+            this.showMessage('Data successfully added.');
+            break;
+            case DBOperation.update:
+            this.showMessage('Data successfully updated.');
+            break;
+            case DBOperation.delete:
+            this.showMessage('Data successfully deleted.');
+            break;
+          }
+        } else if (result === 'error') {
+          this.showMessage('There is some issue in saving records, please contact to system administrator!');
+        } else {
+          // this.showMessage('Please try again, something went wrong');
+        }
+      });
+    }
+    getRecordId(selectedUserId: number) {
+      this.selectedUserId = selectedUserId;
+      this.loadUserContacts(selectedUserId);
       
     }
   }

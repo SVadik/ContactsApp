@@ -18,6 +18,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { environment } from '@environments/environment';
 import { UserformComponent } from '@app/userform/userform.component';
+import { ContactformComponent } from '@app/contactform';
 let AdminComponent = class AdminComponent {
     constructor(userService, authenticationService, snackBar, _contactService, dialog) {
         this.userService = userService;
@@ -28,7 +29,9 @@ let AdminComponent = class AdminComponent {
         this.loading = false;
         this.users = [];
         this.displayedColumns = ['id', 'username', 'firstname', 'lastname', 'middlename', 'role', 'action'];
+        this.displayedContactColumns = ['name', 'email', 'gender', 'birth', 'message', 'action'];
         this.dataSource = new MatTableDataSource();
+        this.dataSourceContact = new MatTableDataSource();
         this.currentUser = this.authenticationService.currentUserValue;
     }
     applyFilter(event) {
@@ -100,7 +103,7 @@ let AdminComponent = class AdminComponent {
         this.selectedUser = this.dataSource.data.filter(x => x.id === id)[0];
         this.openUserDialog();
     }
-    deleteContact(id) {
+    deleteUser(id) {
         this.dbops = DBOperation.delete;
         this.modalTitle = 'Confirm to Delete ?';
         this.modalBtnTitle = 'Delete';
@@ -112,8 +115,67 @@ let AdminComponent = class AdminComponent {
             duration: 3000
         });
     }
-    getRecordId(id) {
-        console.log(id);
+    loadUserContacts(userId) {
+        this._contactService.getUserContacts(`${environment.apiUrl}/home/getUserContacts`, userId)
+            .subscribe(contacts => {
+            this.loadingState = false;
+            this.dataSourceContact.data = contacts;
+            this.dataSourceContact.paginator = this.paginator;
+            this.dataSourceContact.sort = this.sort;
+        });
+    }
+    editContact(id) {
+        this.dbops = DBOperation.update;
+        this.modalTitle = 'Edit Contact';
+        this.modalBtnTitle = 'Update';
+        this.contact = this.dataSourceContact.data.filter(x => x.id === id)[0];
+        this.openContactDialog();
+    }
+    deleteContact(id) {
+        this.dbops = DBOperation.delete;
+        this.modalTitle = 'Confirm to Delete ?';
+        this.modalBtnTitle = 'Delete';
+        this.contact = this.dataSourceContact.data.filter(x => x.id === id)[0];
+        this.openContactDialog();
+    }
+    openContactDialog() {
+        const dialogRef = this.dialog.open(ContactformComponent, {
+            width: '500px',
+            data: {
+                dbops: this.dbops,
+                modalTitle: this.modalTitle,
+                modalBtnTitle: this.modalBtnTitle,
+                contact: this.contact
+            }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+            if (result === 'success') {
+                this.loadingState = true;
+                this.loadUserContacts(this.selectedUserId);
+                switch (this.dbops) {
+                    case DBOperation.create:
+                        this.showMessage('Data successfully added.');
+                        break;
+                    case DBOperation.update:
+                        this.showMessage('Data successfully updated.');
+                        break;
+                    case DBOperation.delete:
+                        this.showMessage('Data successfully deleted.');
+                        break;
+                }
+            }
+            else if (result === 'error') {
+                this.showMessage('There is some issue in saving records, please contact to system administrator!');
+            }
+            else {
+                // this.showMessage('Please try again, something went wrong');
+            }
+        });
+    }
+    getRecordId(selectedUserId) {
+        this.selectedUserId = selectedUserId;
+        this.loadUserContacts(selectedUserId);
     }
 };
 __decorate([

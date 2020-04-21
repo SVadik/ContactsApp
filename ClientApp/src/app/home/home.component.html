@@ -4,7 +4,6 @@
     <p>You're logged in ContactsApp!!</p>
     <p>Your role is: <strong>{{currentUser.role}}</strong>.</p>
     <p>This page can be accessed by <u>all authenticated users</u>.</p>
-    <p class="mb-1">Current user from secure api end point:</p>
     <div *ngIf="loading" class="spinner-border spinner-border-sm"></div>
     <!-- <ul *ngIf="userFromApi">
       <li>{{userFromApi.firstName}} {{userFromApi.lastName}}</li>
@@ -16,10 +15,10 @@
       <h2 style="text-align: center;">Contact List</h2>
       <div class="home-container mat-elevation-z8">
         <div><button title="Create" mat-raised-button color="accent" (click)="addContact()">Create</button></div>
-          <mat-form-field>
-            <mat-label>Filter</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Name">
-          </mat-form-field>
+        <mat-form-field>
+          <mat-label>Filter</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Name">
+        </mat-form-field>
         <table mat-table #table [dataSource]="dataSource" matSort>
           
           <!-- Id Column -->
@@ -79,7 +78,7 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
-        <mat-paginator [pageSizeOptions]="[2, 5, 10, 20]" showFirstLastButtons></mat-paginator>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
         
       </div>
     </ng-template>

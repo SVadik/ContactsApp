@@ -15,6 +15,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserService } from '../_services/user.service';
 import { DBOperation } from '../shared/DBOperation';
+import { Global } from '../shared/Global';
 import { environment } from '@environments/environment';
 let UserformComponent = class UserformComponent {
     constructor(data, fb, userService, dialogRef) {
@@ -22,24 +23,26 @@ let UserformComponent = class UserformComponent {
         this.fb = fb;
         this.userService = userService;
         this.dialogRef = dialogRef;
-        this.genders = [];
+        this.roles = [];
+        this.role = 'admin';
         // form errors model
         // tslint:disable-next-line:member-ordering
         this.formErrors = {
-            'id': '',
+            // 'id': '',
             'username': '',
             'firstname': '',
             'lastname': '',
             'middlename': '',
             'password': '',
             'role': '',
+            'token': '',
         };
         // custom valdiation messages
         // tslint:disable-next-line:member-ordering
         this.validationMessages = {
-            'id': {
-                'required': 'Id is required.'
-            },
+            // 'id': {
+            //   'required': 'Id is required.'
+            // },
             'username': {
                 'required': 'Username is required.'
             },
@@ -62,12 +65,18 @@ let UserformComponent = class UserformComponent {
         this.userFrm = this.fb.group({
             id: ['', Validators.required],
             username: ['', Validators.required],
-            password: ['', Validators.required],
+            password: [''],
             firstname: ['', Validators.required],
             lastname: ['', Validators.required],
             middlename: [''],
-            role: ['', Validators.required]
+            role: ['', Validators.required],
+            token: [''],
+            contacts: [''],
+            passwordHash: [''],
+            passwordSalt: ['']
         });
+        this.roles = Global.roles;
+        this.role = this.data.user.role;
         // subscribe on value changed event of form to show validation message
         this.userFrm.valueChanges.subscribe(data => this.onValueChanged(data));
         this.onValueChanged();
@@ -117,7 +126,7 @@ let UserformComponent = class UserformComponent {
             //     });
             //   break;
             case DBOperation.update:
-                this.userService.updateUser(`${environment.apiUrl}/home/updateUser`, userData).subscribe(data => {
+                this.userService.updateUser(`${environment.apiUrl}/users/updateUser`, userData.value).subscribe(data => {
                     // Success
                     if (data.message) {
                         this.dialogRef.close('success');
@@ -130,7 +139,7 @@ let UserformComponent = class UserformComponent {
                 });
                 break;
             case DBOperation.delete:
-                this.userService.deleteUser(`${environment.apiUrl}/home/deleteUser`, userData.id).subscribe(data => {
+                this.userService.deleteUser(`${environment.apiUrl}/users/deleteUser`, userData.value.id).subscribe(data => {
                     if (data.message) {
                         this.dialogRef.close('success');
                     }

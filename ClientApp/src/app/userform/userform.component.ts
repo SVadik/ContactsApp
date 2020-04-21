@@ -8,7 +8,7 @@ import { UserService } from '../_services/user.service';
 import { DBOperation } from '../shared/DBOperation';
 import { Global } from '../shared/Global';
 import { environment } from '@environments/environment';
-import { User } from '@app/_models';
+import { User, Role } from '@app/_models';
 import { AdminComponent } from '@app/admin';
 
 @Component({
@@ -26,7 +26,8 @@ export class UserformComponent implements OnInit {
   listFilter: string;
   selectedOption: string;
   user: User;
-  genders = [];
+  roles = [];
+  role = 'admin';
   
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
   private fb: FormBuilder,
@@ -38,12 +39,18 @@ export class UserformComponent implements OnInit {
     this.userFrm = this.fb.group({
       id: ['', Validators.required],
       username: ['', Validators.required],
-      password: ['', Validators.required],
+      password: [''],
       firstname: ['', Validators.required],
       lastname: ['', Validators.required],
       middlename: [''],
-      role: ['', Validators.required]
+      role: ['', Validators.required],
+      token: [''],
+      contacts: [''],
+      passwordHash: [''],
+      passwordSalt: ['']
     });
+    this.roles = Global.roles;
+    this.role = this.data.user.role;
     // subscribe on value changed event of form to show validation message
     this.userFrm.valueChanges.subscribe(data => this.onValueChanged(data));
     this.onValueChanged();
@@ -77,20 +84,21 @@ export class UserformComponent implements OnInit {
   // form errors model
   // tslint:disable-next-line:member-ordering
   formErrors = {
-    'id': '',
+    // 'id': '',
     'username': '',
     'firstname': '',
     'lastname': '',
     'middlename': '',
     'password': '',
     'role': '',
+    'token': '',
   };
   // custom valdiation messages
   // tslint:disable-next-line:member-ordering
   validationMessages = {
-    'id': {
-      'required': 'Id is required.'
-    },
+    // 'id': {
+    //   'required': 'Id is required.'
+    // },
     'username': {
       'required': 'Username is required.'
     },
@@ -105,8 +113,7 @@ export class UserformComponent implements OnInit {
     },
     'role': {
       'required': 'Role is required.'
-    },
-    
+    },    
   };
   
   onSubmit(userData: any) {
@@ -126,7 +133,7 @@ export class UserformComponent implements OnInit {
       //     });
       //   break;
       case DBOperation.update:
-      this.userService.updateUser(`${environment.apiUrl}/home/updateUser`, userData).subscribe(
+      this.userService.updateUser(`${environment.apiUrl}/users/updateUser`, userData.value).subscribe(
         data => {
           // Success
           if (data.message) {
@@ -140,7 +147,7 @@ export class UserformComponent implements OnInit {
         });
         break;
         case DBOperation.delete:
-        this.userService.deleteUser(`${environment.apiUrl}/home/deleteUser`, userData.id).subscribe(
+        this.userService.deleteUser(`${environment.apiUrl}/users/deleteUser`, userData.value.id).subscribe(
           data => {
             if (data.message) {
               this.dialogRef.close('success');

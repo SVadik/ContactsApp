@@ -22,4 +22,5 @@ RUN dotnet publish "ContactsApp.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ContactsApp.dll"]
+#ENTRYPOINT ["dotnet", "ContactsApp.dll"]
+CMD dotnet ContactsApp.dll

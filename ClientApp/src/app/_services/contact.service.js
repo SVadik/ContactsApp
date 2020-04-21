@@ -42,6 +42,11 @@ let ContactService = class ContactService {
         const newurl = `${url}?id=${id}`; // DELETE api/contact?id=42
         return this.http.delete(newurl, httpOptions);
     }
+    // get all contact data
+    getUserContacts(url, userId) {
+        return this.http.get(`${url}?id=${userId}`)
+            .pipe(catchError(this.handleError));
+    }
     // custom handler
     handleError(error) {
         if (error.error instanceof ErrorEvent) {

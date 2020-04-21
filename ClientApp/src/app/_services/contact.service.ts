@@ -17,39 +17,38 @@ const httpOptions = {
 @Injectable({ providedIn: 'root' })
 export class ContactService {
   constructor(private http: HttpClient) { }
-
+  
   // get all contact data
   getAllContacts(url: string): Observable<IContact[]> {
     return this.http.get<IContact[]>(url)
-      .pipe(
-        
-        catchError(this.handleError)
-      );
+    .pipe(catchError(this.handleError));
   }
-
+  
   // insert new contact details
   addContact(url: string, contact: IContact): Observable<any> {
     return this.http.post(url, JSON.stringify(contact), httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
+    .pipe(catchError(this.handleError));
   }
-
+  
   // update contact details
   updateContact(url: string, contact: IContact): Observable<any> {
     // const newurl = `${url}?id=${id}`;
     return this.http.put(url, JSON.stringify(contact), httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
+    .pipe(catchError(this.handleError));
   }
-
+  
   // delete contact information
   deleteContact(url: string, id: number): Observable<any> {
     const newurl = `${url}?id=${id}`; // DELETE api/contact?id=42
     return this.http.delete(newurl, httpOptions);
   }
-
+  
+  // get all contact data
+  getUserContacts(url: string, userId: number): Observable<IContact[]> {
+    return this.http.get<IContact[]>(`${url}?id=${userId}`)
+    .pipe(catchError(this.handleError));
+  }
+  
   // custom handler
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
@@ -61,8 +60,9 @@ export class ContactService {
       console.error(
         `Backend returned code ${error.status}, ` +
         `body was: ${error.error}`);
+      }
+      // return an observable with a user-facing error message
+      return throwError('Something bad happened; please try again later.');
     }
-    // return an observable with a user-facing error message
-    return throwError('Something bad happened; please try again later.');
   }
-}
+  

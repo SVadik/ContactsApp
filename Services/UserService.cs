@@ -24,7 +24,7 @@ namespace ContactsApp.Services
     public class UserService : IUserService
     {
         private readonly AppSettings _appSettings;
-        private ApplicationContext _context;
+        public ApplicationContext _context;
 
         public UserService(IOptions<AppSettings> appSettings, ApplicationContext context)
         {

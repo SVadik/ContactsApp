@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ContactsApp.Data;
 using ContactsApp.Entities;
 using ContactsApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsApp.Controllers
@@ -108,6 +109,15 @@ namespace ContactsApp.Controllers
             contact.Deleted = true;
             _context.SaveChanges();
             return Ok(new { message = "Contact is deleted successfully." });
+        }
+
+        [Authorize(Roles = Role.Admin)]
+        [HttpGet("{id}")]
+        [Route("getUserContacts")]
+        public IEnumerable<Contact> GetUserContacts([FromQuery]int id)
+        {
+            var contacts = _context.Contacts.Where(x => x.User.Id == id);
+            return contacts;
         }
     }
 }

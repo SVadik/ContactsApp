@@ -17,6 +17,7 @@ import { ContactService } from './_services';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
 import { UserformComponent } from './userform/userform.component';
+import { YesNoPipe } from './shared/yesNoPipe';
 
 @NgModule({
     imports: [
@@ -28,7 +29,7 @@ import { UserformComponent } from './userform/userform.component';
         ReactiveFormsModule,
         LayoutModule,
         AppMaterialModule,
-        appRoutingModule,
+        appRoutingModule
     ],
     declarations: [
         AppComponent,
@@ -37,7 +38,8 @@ import { UserformComponent } from './userform/userform.component';
         LoginComponent,
         RegisterComponent,
         ContactformComponent,
-        UserformComponent 
+        UserformComponent,
+        YesNoPipe
       ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
